@@ -1,3 +1,9 @@
+:root {
+  --primaryColor: #16181c;
+  --secondaryColor: #fcfaf6;
+  --accentColor: #cb8ad3;
+}
+
 * {
   font-family: "Lexend Deca", sans-serif;
   text-align: start;
