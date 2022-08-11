@@ -1,30 +1,54 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { saveTutorial } from "../services/tutorial";
+import { useTutorial } from "@/store/tutorialStore";
+import { saveTutorial } from "../../services/tutorial";
+import { schema } from "./validator";
+import validUrl from "valid-url";
+import ErrorConnection from "../ErrorConnection.vue";
+const store = useTutorial();
 const router = useRouter();
 
 const title = ref("");
 const description = ref("");
 const videoUrl = ref("");
 const publishedStatus = ref(true);
+let loading = ref(false);
+let error = ref(false);
 
 const handleSubmit = async () => {
-  const resp = await saveTutorial({
+  loading.value = true;
+  error.value = false;
+  const data = {
     title: title.value,
     description: description.value,
     videoUrl: videoUrl.value,
     publishedStatus: publishedStatus.value,
     userId: 1,
+  };
+
+  Object.keys(data).forEach((key) => {
+    if (key === "videoUrl" && !validUrl.isWebUri(data[key])) {
+      return (error.value = true);
+    }
+    if (data[key] === "") return (error.value = true);
   });
-  if (resp.status === 201) {
-    router.push("/");
+
+  if (!error.value) {
+    const resp = await saveTutorial(data);
+    if (resp.status === 201) {
+      router.push("/");
+    }
+  } else {
+    error.value = true;
   }
+  loading.value = false;
 };
 </script>
 <template>
   <v-card class="card__container">
-    <v-form @submit.prevent="handleSubmit">
+    <ErrorConnection v-if="store.tutorialErrors !== ''" />
+    <v-form @submit.prevent="handleSubmit" v-if="!store.tutorialErrors">
       <v-row>
         <v-col cols="12">
           <v-text-field
@@ -56,32 +80,48 @@ const handleSubmit = async () => {
       <v-row class="action__container">
         <v-switch
           inset
-          label="Public"
           v-model="publishedStatus"
           class="my_switch"
           hide-details
         />
-        <v-btn variant="outlined" rounded type="submit">SAVE</v-btn>
+        <p v-if="error">All Fields are required</p>
+        <v-btn variant="outlined" rounded type="submit" v-if="!loading"
+          >SAVE</v-btn
+        >
+        <v-progress-circular indeterminate v-if="loading" />
       </v-row>
     </v-form>
   </v-card>
 </template>
 
 <style scoped>
-@import "../assets/base.css";
+@import "../../assets/base.css";
 .card__container {
   padding: 0.65rem 1.5rem;
   border-radius: 15px;
   border-left: 10px solid var(--accentColor);
 }
+.card__container-error {
+  border-left: 10px solid error;
+}
 
 .action__container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   padding-bottom: 1rem;
 }
 .action__container button {
   color: var(--accentColor);
+}
+.my_switch {
+  max-width: 100px;
+}
+
+.action__container p {
+  text-align: center;
+  color: red;
+  font-size: 16px;
 }
 </style>

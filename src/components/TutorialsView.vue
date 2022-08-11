@@ -2,13 +2,18 @@
 import { ref } from "vue";
 import TutorialCard from "./TutorialCard.vue";
 import { useTutorial } from "@/store/tutorialStore";
+import ErrorConnection from "./ErrorConnection.vue";
 const store = useTutorial();
 
 let inputSearch = ref("");
+let timerDebounce = null;
 
 const handleSearchChange = (e) => {
   let text = e.target.value.toLowerCase();
-  store.setFilterTutorials(text);
+  clearTimeout(timerDebounce);
+  timerDebounce = setTimeout(() => {
+    store.setFilterTutorials(text);
+  }, 2000);
 };
 
 const handleClick = async (tutoId) => {
@@ -26,6 +31,9 @@ const handleClick = async (tutoId) => {
         v-on:input="handleSearchChange"
         :disabled="store.tutorialLoading"
       />
+      <div class="text-center" v-if="store.tutorialLoading">
+        <v-progress-circular indeterminate />
+      </div>
       <div class="tutorial__list" v-if="store.tutorialsFiltered !== 0">
         <v-card
           v-for="tuto in store.tutorialsFiltered"
@@ -38,6 +46,7 @@ const handleClick = async (tutoId) => {
       </div>
     </div>
     <div class="tutorials__container">
+      <ErrorConnection v-if="store.tutorialErrors !== ''" />
       <TutorialCard />
     </div>
   </div>
@@ -59,13 +68,13 @@ const handleClick = async (tutoId) => {
   border-radius: 15px;
   overflow: hidden;
   padding: 1.65rem 0.65rem;
-  border-left: 5px solid var(--accentColor);
+  border-left: 5px solid var(--primaryColor);
   align-items: center;
 }
 
 .tuto__title:hover {
   transition: 0.4s;
-  transform: translateY(-5px);
+  border-left: 5px solid var(--accentColor);
 }
 
 .tuto__title p {
@@ -89,10 +98,12 @@ const handleClick = async (tutoId) => {
   display: none;
 }
 .container {
+  min-height: 100%;
   display: flex;
   gap: 1rem;
   align-items: flex-start;
   justify-items: center;
+  overflow-x: hidden;
 }
 .tutorials__container {
   width: 75%;

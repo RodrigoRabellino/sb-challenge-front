@@ -8,15 +8,14 @@ const store = useTutorial();
 onMounted(() => store.fetchAllTutorials());
 </script>
 <template>
-  <div>
-    <TutorialsView />
-  </div>
+  <TutorialsView />
 </template>
 
 <style scoped>
-.tutorials__container {
+.container {
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
 }
 </style>

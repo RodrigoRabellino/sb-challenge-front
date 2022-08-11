@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { querySearch } from "@/services/tutorial";
 const API_URL = process.env.VUE_APP_API_URL;
 
 export const useTutorial = defineStore({
@@ -10,28 +11,37 @@ export const useTutorial = defineStore({
       tutorialsFiltered: [],
       tutorialCurrent: {},
       tutorialLoading: false,
+      tutorialErrors: "",
     };
   },
   actions: {
     async fetchAllTutorials() {
       this.tutorialLoading = true;
-      const { data } = await axios.get(`${API_URL}/tutorials`);
-      this.tutorialsList = [...data];
-      this.tutorialsFiltered = [...data];
-      if (this.tutorialsList.length !== 0) console.log("allTutorials ready");
+      this.tutorialErrors = "";
+
+      try {
+        const resp = await axios.get(`${API_URL}/tutorials`);
+        if (resp.data) {
+          this.tutorialsList = [...resp.data];
+          this.tutorialsFiltered = [...resp.data];
+        } else {
+          this.tutorialErrors = "Cannot connect the computer to the server";
+        }
+      } catch (error) {
+        this.tutorialErrors = "Cannot connect the computer to the server";
+      }
       this.tutorialLoading = false;
     },
-    setFilterTutorials(text) {
-      console.log(text);
+    async setFilterTutorials(text) {
+      this.tutorialsFiltered = [];
+      this.tutorialLoading = true;
       if (text === "") {
         this.tutorialsFiltered = [...this.tutorialsList];
       } else {
-        this.tutorialsFiltered = [
-          ...this.tutorialsList.filter((item) =>
-            item.title.toLowerCase().includes(text)
-          ),
-        ];
+        const resp = await querySearch(text);
+        this.tutorialsFiltered = [...resp.data];
       }
+      this.tutorialLoading = false;
     },
     async setCurrentTutorial(id) {
       const { data } = await axios.get(`${API_URL}/tutorials/${id}`);

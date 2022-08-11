@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainScreen from "./components/MainScreen.vue";
-import CreateScreen from "./components/CreateScreen.vue";
+import CreateScreen from "./components/createScreen/CreateScreen.vue";
 
 const routes = [
   {
