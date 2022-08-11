@@ -1,11 +1,11 @@
 <script setup>
 import { useTutorial } from "@/store/tutorialStore";
-import { onBeforeMount } from "vue";
+import { onMounted } from "vue";
 import TutorialsView from "./TutorialsView.vue";
 
 const store = useTutorial();
 
-onBeforeMount(() => store.fetchAllTutorials());
+onMounted(() => store.fetchAllTutorials());
 </script>
 <template>
   <div>

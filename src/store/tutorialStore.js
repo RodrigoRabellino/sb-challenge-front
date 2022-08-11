@@ -9,14 +9,17 @@ export const useTutorial = defineStore({
       tutorialsList: [],
       tutorialsFiltered: [],
       tutorialCurrent: {},
+      tutorialLoading: false,
     };
   },
   actions: {
     async fetchAllTutorials() {
+      this.tutorialLoading = true;
       const { data } = await axios.get(`${API_URL}/tutorials`);
       this.tutorialsList = [...data];
       this.tutorialsFiltered = [...data];
       if (this.tutorialsList.length !== 0) console.log("allTutorials ready");
+      this.tutorialLoading = false;
     },
     setFilterTutorials(text) {
       console.log(text);
@@ -33,7 +36,6 @@ export const useTutorial = defineStore({
     async setCurrentTutorial(id) {
       const { data } = await axios.get(`${API_URL}/tutorials/${id}`);
       this.tutorialCurrent = { ...data };
-      console.log(this.tutorialCurrent);
     },
   },
 });

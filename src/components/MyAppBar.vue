@@ -1,7 +1,8 @@
 <script setup>
-import { useRouter, useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
+
 const handleClick = (path) => {
   router.push(`/${path}`);
 };

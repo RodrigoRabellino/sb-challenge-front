@@ -3,32 +3,32 @@ import { ref } from "vue";
 import TutorialCard from "./TutorialCard.vue";
 import { useTutorial } from "@/store/tutorialStore";
 const store = useTutorial();
-const { tutorialsFiltered, setFilterTutorials, setCurrentTutorial } = store;
 
 let inputSearch = ref("");
 
 const handleSearchChange = (e) => {
   let text = e.target.value.toLowerCase();
-  setFilterTutorials(text);
+  store.setFilterTutorials(text);
 };
 
 const handleClick = async (tutoId) => {
-  await setCurrentTutorial(tutoId);
+  await store.setCurrentTutorial(tutoId);
 };
 </script>
 <template>
-  <div class="container" v-if="tutorialsFiltered.length !== 0">
+  <div class="container">
     <div class="tutorial__list__container">
-      <input
-        outlined
+      <v-text-field
+        variant="outlined"
+        density="comfortable"
         v-model="inputSearch"
         placeholder="Search"
         v-on:input="handleSearchChange"
+        :disabled="store.tutorialLoading"
       />
-      <div class="tutorial__list">
+      <div class="tutorial__list" v-if="store.tutorialsFiltered !== 0">
         <v-card
-          v-bind:is="tutorialsFiltered"
-          v-for="tuto in tutorialsFiltered"
+          v-for="tuto in store.tutorialsFiltered"
           :key="tuto.id"
           class="tuto__title"
           @click.prevent="() => handleClick(tuto.id)"
@@ -37,7 +37,7 @@ const handleClick = async (tutoId) => {
         </v-card>
       </div>
     </div>
-    <div class="tutorials__container" v-if="store">
+    <div class="tutorials__container">
       <TutorialCard />
     </div>
   </div>
@@ -48,6 +48,9 @@ const handleClick = async (tutoId) => {
 .tutorial__list__container {
   width: 25%;
 }
+.v-field__input .v-field__input {
+  border-radius: 50px;
+}
 
 .tuto__title {
   display: flex;
@@ -55,9 +58,8 @@ const handleClick = async (tutoId) => {
   cursor: pointer;
   border-radius: 15px;
   overflow: hidden;
-  padding: 1rem 0.65rem;
-  border-left: 10px solid var(--accentColor);
-  transform: translateY(-5px);
+  padding: 1.65rem 0.65rem;
+  border-left: 5px solid var(--accentColor);
   align-items: center;
 }
 
@@ -67,7 +69,10 @@ const handleClick = async (tutoId) => {
 }
 
 .tuto__title p {
+  width: 20ch;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tutorial__list {
@@ -91,21 +96,5 @@ const handleClick = async (tutoId) => {
 }
 .tutorials__container {
   width: 75%;
-}
-
-input {
-  width: 100%;
-  transition: 0.4s;
-  padding: 0.65rem 1rem;
-  background-color: var(--primaryColor);
-  color: var(--secondaryColor);
-  border-radius: 50px;
-  border: 2px solid var(--primaryColor);
-}
-input:focus-visible {
-  transition: 0.4s;
-  border: none;
-  outline: none;
-  border: 2px solid var(--accentColor);
 }
 </style>
