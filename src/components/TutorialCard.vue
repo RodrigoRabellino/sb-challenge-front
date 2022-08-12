@@ -1,9 +1,14 @@
 <script setup>
 import { useTutorial } from "@/store/tutorialStore";
 import controllerImg from "@/assets/images/controller.svg";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const store = useTutorial();
 
-const handleUpdate = () => console.log(store.tutorialCurrent.id);
+const handleUpdate = () => {
+  router.push("/update");
+};
 const handleVideo = () =>
   window.open(store.tutorialCurrent.videoUrl, { _blank: true });
 </script>
@@ -66,6 +71,7 @@ a:hover {
   margin-top: 2rem;
 }
 .text-center img {
+  margin-top: 1rem;
   transform: rotate(-10deg);
   width: 300px;
 }

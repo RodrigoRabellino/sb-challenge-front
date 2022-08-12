@@ -21,4 +21,14 @@ export default {
   </v-app>
 </template>
 
-<style></style>
+<style>
+#app {
+  max-height: 100vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+#app::-webkit-scrollbar {
+  display: none;
+}
+</style>

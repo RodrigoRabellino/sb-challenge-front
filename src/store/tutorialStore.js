@@ -44,6 +44,8 @@ export const useTutorial = defineStore({
       this.tutorialLoading = false;
     },
     async setCurrentTutorial(id) {
+      if (id === -1) return (this.tutorialCurrent = {});
+
       const { data } = await axios.get(`${API_URL}/tutorials/${id}`);
       this.tutorialCurrent = { ...data };
     },
