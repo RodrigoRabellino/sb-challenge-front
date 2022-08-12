@@ -20,17 +20,13 @@ const handleVideo = () =>
       {{ store.tutorialCurrent.title }}
     </v-card-title>
     <v-card-text>{{ store.tutorialCurrent.description }}</v-card-text>
-    <div class="user__data">
-      <v-card-subtitle>
-        <a href="#"> {{ store.tutorialCurrent.user.username }}</a>
-      </v-card-subtitle>
-      <v-card-actions>
-        <v-btn outlined rounded class="btn" @click="handleUpdate"> Edit </v-btn>
-        <v-btn variant="outlined" rounded class="btn" @click="handleVideo">
-          Video
-        </v-btn>
-      </v-card-actions>
-    </div>
+
+    <v-card-actions class="card__action">
+      <v-btn outlined rounded class="btn" @click="handleUpdate"> Edit </v-btn>
+      <v-btn variant="outlined" rounded class="btn" @click="handleVideo">
+        Video
+      </v-btn>
+    </v-card-actions>
   </v-card>
   <div
     class="text-center"
@@ -60,14 +56,11 @@ const handleVideo = () =>
 .btn {
   color: var(--accentColor);
 }
+.card__action {
+  display: flex;
+  justify-content: space-between;
+}
 
-a {
-  text-decoration: none;
-  color: var(--accentColor);
-}
-a:hover {
-  text-decoration: underline;
-}
 .card__container {
   padding: 1rem;
   border-radius: 15px;

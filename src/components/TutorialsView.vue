@@ -66,7 +66,6 @@ const handleClick = async (tutoId) => {
   transition: 0.4s;
   cursor: pointer;
   border-radius: 15px;
-  overflow: hidden;
   padding: 1.65rem 0.65rem;
   border-left: 5px solid var(--primaryColor);
   align-items: center;
@@ -103,7 +102,6 @@ const handleClick = async (tutoId) => {
   gap: 1rem;
   align-items: flex-start;
   justify-items: center;
-  overflow-x: hidden;
 }
 .tutorials__container {
   width: 75%;
