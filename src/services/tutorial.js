@@ -20,7 +20,21 @@ export const updateTutorial = async (data) => {
 
 //softDelete
 export const deleteTutorial = async (id) => {
-  console.log(id);
   const resp = await axios.delete(`${API_URL}/tutorials/${id}`);
+  return resp;
+};
+
+export const deleteAll = async () => {
+  const resp = await axios.delete(`${API_URL}/tutorials/mass_delete`);
+  return resp;
+};
+
+export const fetchTutorialById = async (id) => {
+  const resp = await axios.get(`${API_URL}/tutorials/${id}`);
+  return resp.data;
+};
+
+export const fetchAll = async () => {
+  const resp = await axios.get(`${API_URL}/tutorials`);
   return resp;
 };

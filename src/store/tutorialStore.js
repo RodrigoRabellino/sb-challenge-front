@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
-import axios from "axios";
-import { querySearch } from "@/services/tutorial";
-const API_URL = process.env.VUE_APP_API_URL;
+import { querySearch, fetchTutorialById, fetchAll } from "@/services/tutorial";
 
 export const useTutorial = defineStore({
   id: "tutorialStore",
@@ -20,7 +18,7 @@ export const useTutorial = defineStore({
       this.tutorialErrors = "";
 
       try {
-        const resp = await axios.get(`${API_URL}/tutorials`);
+        const resp = await fetchAll();
         if (resp.data) {
           this.tutorialsList = [...resp.data];
           this.tutorialsFiltered = [...resp.data];
@@ -45,9 +43,15 @@ export const useTutorial = defineStore({
     },
     async setCurrentTutorial(id) {
       if (id === -1) return (this.tutorialCurrent = {});
-
-      const { data } = await axios.get(`${API_URL}/tutorials/${id}`);
-      this.tutorialCurrent = { ...data };
+      const resp = await fetchTutorialById(id);
+      this.tutorialCurrent = { ...resp };
+    },
+    cleanStore() {
+      this.tutorialsList = [];
+      this.tutorialsFiltered = [];
+      this.tutorialCurrent = {};
+      this.tutorialLoading = false;
+      this.tutorialErrors = "";
     },
   },
 });
