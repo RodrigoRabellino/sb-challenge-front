@@ -33,7 +33,6 @@ const handleSubmit = async () => {
     description: description.value,
     videoUrl: videoUrl.value,
     publishedStatus: publishedStatus.value,
-    userId: 1,
   };
 
   Object.keys(data).forEach((key) => {
