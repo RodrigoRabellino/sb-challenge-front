@@ -62,6 +62,7 @@ const handleClick = async (tutoId) => {
 }
 
 .tuto__title {
+  background: #eaeaea;
   display: flex;
   transition: 0.4s;
   cursor: pointer;
