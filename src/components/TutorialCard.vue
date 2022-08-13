@@ -35,7 +35,10 @@ const handleVideo = () =>
     <img class="controller__img" :src="controllerImg" alt="icon controller" />
     <p>Select any tutorial</p>
   </div>
-  <div class="text-center" v-if="store.tutorialsList.length === 0">
+  <div
+    class="text-center"
+    v-if="store.tutorialsList.length === 0 && !store.tutorialErrors"
+  >
     <img :src="emptyGif" alt="empty gif" />
     <p>Ups... nothing to see.</p>
   </div>

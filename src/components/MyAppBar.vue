@@ -3,7 +3,7 @@ import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
-const handleClick = (path) => {
+const handleClick = async (path) => {
   router.push(`/${path}`);
 };
 </script>

@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { fetchAccessToken } from "@/services/user";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useTutorial } from "@/store/tutorialStore";
 import { saveTutorial } from "../../services/tutorial";
@@ -10,6 +11,7 @@ const store = useTutorial();
 const router = useRouter();
 let openSnack = ref(false);
 let snackMessage = ref("");
+let accessToken = ref("");
 
 const title = ref("");
 const description = ref("");
@@ -17,6 +19,14 @@ const videoUrl = ref("");
 const publishedStatus = ref(true);
 let loading = ref(false);
 let error = ref(false);
+
+onMounted(async () => {
+  const resp = await fetchAccessToken();
+  if (resp.status === 201) {
+    accessToken = resp.data.accessToken;
+  }
+  console.log("create make token", accessToken);
+});
 
 const handleSubmit = async () => {
   loading.value = true;
@@ -34,14 +44,20 @@ const handleSubmit = async () => {
     }
     if (data[key] === "") return (error.value = true);
   });
-
   if (!error.value) {
-    const resp = await saveTutorial(data);
-    if (resp.status === 201) {
+    const resp = await saveTutorial(data, accessToken);
+
+    if (!resp) {
+      loading.value = false;
+      snackMessage.value = "Token expired";
+      return (openSnack.value = true);
+    }
+
+    if (resp.status && resp.status === 201) {
       snackMessage.value = "Tutorial created";
       openSnack.value = true;
       setTimeout(() => {
-        router.push("/");
+        return router.push("/");
       }, 1000);
     }
   } else {
@@ -97,13 +113,7 @@ const handleSubmit = async () => {
       </v-row>
     </v-form>
   </v-card>
-  <v-snackbar
-    v-model="openSnack"
-    rounded="pill"
-    absolute
-    bottom
-    color="success"
-  >
+  <v-snackbar v-model="openSnack" rounded="pill" absolute bottom>
     {{ snackMessage }}
   </v-snackbar>
 </template>
