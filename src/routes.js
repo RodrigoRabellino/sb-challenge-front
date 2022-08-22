@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainScreen from "./components/MainScreen.vue";
 import CreateScreen from "./components/createScreen/CreateScreen.vue";
-import UpdateScreen from "@/components/UpdateScreen.vue";
+import UpdateScreen from "./components/UpdateScreen.vue";
+import Login from "./components/user/Login.vue";
+import Profile from "./components/user/Profile.vue";
 
 const routes = [
   {
@@ -18,6 +20,16 @@ const routes = [
     path: "/update",
     name: "update",
     component: UpdateScreen,
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login,
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
   },
 ];
 

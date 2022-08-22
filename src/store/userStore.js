@@ -1,23 +1,34 @@
 import { defineStore } from "pinia";
-import { fetchAccessToken } from "../services/user";
+import { fetchAccessToken, fetchUser } from "../services/user";
 
 export const useUser = defineStore({
   id: "userStore",
   state: () => {
-    return { user: {}, userLoading: false, userError: "" };
+    return { user: {}, isLoading: false, userError: "" };
   },
   actions: {
-    async loginUser(email, pass) {
-      this.userLoading = true;
+    async login(email, pass) {
+      this.isLoading = true;
+      this.userError = "";
       try {
-        const resp = fetchUser(email, pass);
-        if ((resp.status = 401)) this.userError = "bad credentials";
-        if ((resp.status = 500)) this.userError = "Unknown error";
-        if ((resp.status = 200)) this.user = { ...resp.data };
+        const resp = await fetchUser(email, pass);
+        if (resp.status === 404)
+          return (this.userError = "Email not registered");
+        if (resp.status === 500) return (this.userError = "Unknown error");
+        if (resp.status === 401) return (this.userError = "Bad credentials");
+        if (resp.status === 200) {
+          this.user = { ...resp.data };
+          return true;
+        }
       } catch (error) {
+        console.log("error in login", error);
         this.userError = "Unknown error";
+      } finally {
+        this.isLoading = false;
       }
-      this.userLoading = false;
+    },
+    logOut() {
+      this.user = {};
     },
   },
 });

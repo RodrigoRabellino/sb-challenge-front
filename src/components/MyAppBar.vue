@@ -1,30 +1,28 @@
 <script setup>
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, RouterLink } from "vue-router";
+import { useUser } from "@/store/userStore";
 const router = useRouter();
 const route = useRoute();
-
-const handleClick = async (path) => {
-  router.push(`/${path}`);
-};
+const userStore = useUser();
 </script>
 <template>
   <v-app-bar elevation="4" class="appbar">
     <v-container class="container">
       <div class="link__container" @click.prevent="() => handleClick(``)">
-        <p>Home</p>
+        <RouterLink to="/" class="link"> Home</RouterLink>
       </div>
       <div class="options">
         <div class="link__container" @click.prevent="() => handleClick(``)">
-          <p>News</p>
-        </div>
-        <div
-          class="link__container"
-          @click.prevent="() => handleClick(`create`)"
-        >
-          <p>New Tutorial</p>
+          <RouterLink to="/" class="link"> News</RouterLink>
         </div>
         <div class="link__container">
-          <p>Profile</p>
+          <RouterLink to="/create" class="link"> New Tutorial</RouterLink>
+        </div>
+        <div class="link__container" v-if="!userStore.user">
+          <RouterLink to="/profile" class="link"> Profile</RouterLink>
+        </div>
+        <div class="link__container" v-else>
+          <RouterLink to="/login" class="link"> Login</RouterLink>
         </div>
       </div>
     </v-container>
@@ -40,6 +38,12 @@ const handleClick = async (path) => {
   background-color: var(--primaryColor);
   color: var(--secondaryColor);
 }
+
+.link {
+  text-decoration: none;
+  color: white;
+}
+
 .container {
   padding-top: 10px;
   padding-bottom: 10px;

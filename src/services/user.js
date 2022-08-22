@@ -6,8 +6,13 @@ export const fetchAccessToken = async () => {
   return resp;
 };
 
-export const fetchUser = async (mail, pass) => {
-  body = { mail, pass };
-  const resp = await axios.post(`${API_URL}/users`, body);
-  return resp;
+export const fetchUser = async (email, password) => {
+  const body = { email, password };
+  try {
+    const resp = await axios.post(`${API_URL}/login`, body);
+    return resp;
+  } catch (error) {
+    console.log("fetchuserError", error);
+    return error.response;
+  }
 };
